@@ -1,12 +1,12 @@
+
+
 var bodyElement = document.querySelectorAll(".red");
- 
 var requestAnimationFrame = window.requestAnimationFrame || 
                             window.mozRequestAnimationFrame || 
                             window.webkitRequestAnimationFrame || 
                             window.msRequestAnimationFrame;
  
 var delay = 0;
- 
 function changeColor() {
     delay++;
     var color;
