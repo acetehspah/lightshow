@@ -76,7 +76,6 @@ document.onkeypress = function (e) {
     }
     if(str === "0")
     {
-        imSource.src = "hehexd";
         color = "rgba(255, 255, 255, ";
         image = 0;
         randCol = 0;
