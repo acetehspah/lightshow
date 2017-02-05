@@ -1,4 +1,4 @@
-var length = 800;
+var length = 1600;
 var x = new Array(length);
 var y = new Array(length);
 var size = new Array(length);

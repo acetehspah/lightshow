@@ -85,7 +85,7 @@ function gotStream(stream) {
 
     //wave = createWaveAnalyser(audioContext);
     wave = audioContext.createAnalyser();
-    wave.fftSize = 1024;
+    wave.fftSize = 2048;
     mediaStreamSource.connect(wave);
     frequencyData = new Uint8Array(wave.frequencyBinCount * 2);
 
@@ -107,7 +107,7 @@ function drawLoop( time ) {
     //canvasContext.arc(WIDTH / 2, HEIGHT / 2, getVScale(meter.volume), 0, 2 * Math.PI);
     canvasContext.fillStyle = "white";
     canvasContext.fill();
-    canvasContext.lineWidth = 10;
+    canvasContext.lineWidth = 2;
     canvasContext.strokeStyle = "white";
     canvasContext.stroke();
     //for(i = 0; i < meter.wave.length; i++)
@@ -115,14 +115,61 @@ function drawLoop( time ) {
     //    canvasContext.fillRect(0 + i, HEIGHT/2, 5, meter.wave[i] * HEIGHT/2);
     //}
     try{
-    for(i = 0; i < frequencyData.length; i++)
+    for(i = 0; i < frequencyData.length/4; i++)
     {
         //canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2, 1, -frequencyData[i]);
         //canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2, 1, frequencyData[i]);
         //canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2, 1, -frequencyData[i]);
         //canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2, 1, frequencyData[i]);
-        canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/10, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
-        canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/10, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
+        //canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/20, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
+        //canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/20, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
+        canvasContext.strokeStyle = "rgba(255, 255, 255, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.cos(Math.PI * i / frequencyData.length * 2), HEIGHT/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.sin(Math.PI * i / frequencyData.length * 2));
+        canvasContext.lineTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(Math.PI * i / frequencyData.length * 2), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(Math.PI * i / frequencyData.length * 2));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(0, 0, 0, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(Math.PI * i / frequencyData.length * 2), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(Math.PI * i / frequencyData.length * 2));
+        canvasContext.lineTo(WIDTH/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.cos(Math.PI * i / frequencyData.length * 2), HEIGHT/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.sin(Math.PI * i / frequencyData.length * 2));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(255, 255, 255, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.cos(Math.PI * i / frequencyData.length * 2 + Math.PI), HEIGHT/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.sin(Math.PI * i / frequencyData.length * 2 + Math.PI));
+        canvasContext.lineTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(Math.PI * i / frequencyData.length * 2 + Math.PI), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(Math.PI * i / frequencyData.length * 2 + Math.PI));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(0, 0, 0, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(Math.PI * i / frequencyData.length * 2 + Math.PI), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(Math.PI * i / frequencyData.length * 2 + Math.PI));
+        canvasContext.lineTo(WIDTH/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.cos(Math.PI * i / frequencyData.length * 2 + Math.PI), HEIGHT/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.sin(Math.PI * i / frequencyData.length * 2 + Math.PI));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(255, 255, 255, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.cos(-(Math.PI * i / frequencyData.length * 2)), HEIGHT/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.sin(-(Math.PI * i / frequencyData.length * 2)));
+        canvasContext.lineTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(-(Math.PI * i / frequencyData.length * 2)), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(-(Math.PI * i / frequencyData.length * 2)));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(0, 0, 0, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(-(Math.PI * i / frequencyData.length * 2)), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(-(Math.PI * i / frequencyData.length * 2)));
+        canvasContext.lineTo(WIDTH/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.cos(-(Math.PI * i / frequencyData.length * 2)), HEIGHT/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.sin(-(Math.PI * i / frequencyData.length * 2)));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(255, 255, 255, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.cos(-(Math.PI * i / frequencyData.length * 2) + Math.PI), HEIGHT/2 + (getRadius(meter.volume)+ frequencyData[i]/255*HEIGHT/20) * Math.sin(-(Math.PI * i / frequencyData.length * 2) + Math.PI));
+        canvasContext.lineTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(-(Math.PI * i / frequencyData.length * 2) + Math.PI), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(-(Math.PI * i / frequencyData.length * 2) + Math.PI));
+        canvasContext.stroke();
+
+        canvasContext.strokeStyle = "rgba(0, 0, 0, .3)";
+        canvasContext.beginPath();
+        canvasContext.moveTo(WIDTH/2 + getRadius(meter.volume) * Math.cos(-(Math.PI * i / frequencyData.length * 2) + Math.PI), HEIGHT/2 + (getRadius(meter.volume)) * Math.sin(-(Math.PI * i / frequencyData.length * 2) + Math.PI));
+        canvasContext.lineTo(WIDTH/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.cos(-(Math.PI * i / frequencyData.length * 2) + Math.PI), HEIGHT/2 + (getRadius(meter.volume)- frequencyData[i]/255*HEIGHT/20) * Math.sin(-(Math.PI * i / frequencyData.length * 2) + Math.PI));
+        canvasContext.stroke();
     }
     }
     catch(err) {
