@@ -85,7 +85,7 @@ function gotStream(stream) {
 
     //wave = createWaveAnalyser(audioContext);
     wave = audioContext.createAnalyser();
-    wave.fftSize = 2048;
+    wave.fftSize = 1024;
     mediaStreamSource.connect(wave);
     frequencyData = new Uint8Array(wave.frequencyBinCount * 2);
 
@@ -97,7 +97,7 @@ function drawLoop( time ) {
     // clear the background
     canvasContext.clearRect(0,0,WIDTH,HEIGHT);
     wave.getByteFrequencyData(frequencyData);
-    
+    console.log(frequencyData)
     drawParticles(canvasContext, meter.volume);
 
     // draw a bar based on the current volume
@@ -121,8 +121,8 @@ function drawLoop( time ) {
         //canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2, 1, frequencyData[i]);
         //canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2, 1, -frequencyData[i]);
         //canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2, 1, frequencyData[i]);
-        canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/8, 1, frequencyData[i] * 2 / 255 * HEIGHT / 8);
-        canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/8, 1, frequencyData[i] * 2 / 255 * HEIGHT / 8);
+        canvasContext.fillRect(WIDTH/2 - i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/10, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
+        canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/10, 1, frequencyData[i] * 2 / 255 * HEIGHT / 10);
     }
     }
     catch(err) {
