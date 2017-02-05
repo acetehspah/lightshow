@@ -1,4 +1,4 @@
-var length = 1600;
+var length = 1000;
 var x = new Array(length);
 var y = new Array(length);
 var size = new Array(length);
@@ -10,16 +10,21 @@ var rangeRad = 2;
 var rangeScale = 5;
 var rangeD = 40;
 var minTime = 25;
-var rangeTime = 25;
+var rangeTime = 40;
 var WIDTH = 0;
 var HEIGHT = 0;
+var type = 1;
 
 
 function createParticles() {
 	for(i = 0; i < length; i++)
 	{
-		time[i] = 0;
+		time[i] = Math.random() * rangeTime;
 	}
+}
+
+function changeType(taip) {
+	type = parseInt(taip);
 }
 
 function resizeParticleCanvas(canvas) {
@@ -27,7 +32,7 @@ function resizeParticleCanvas(canvas) {
 	HEIGHT = canvas.height;
 }
 
-function drawParticles(canvas, volume) {
+function drawParticles(canvas, volume, color, image, imSource) {
 	for(i = 0; i < length; i++)
 	{
 		if(time[i] < 1)
@@ -44,12 +49,40 @@ function drawParticles(canvas, volume) {
 			dy[i] = Math.random() * rangeD - rangeD/2;
 			time[i] = minTime + Math.random() * rangeTime;
 		}
-		canvas.beginPath();
-		canvas.arc(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale, 0, 2 * Math.PI);
-		canvas.fillStyle = "rgba(255, 255, 255," + (time[i] / (minTime + rangeTime)) + ")";
-		canvas.fill();
+
+		if(image == 1)
+		{
+			canvas.drawImage(imSource, x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2, size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2);
+		}
+		else if(type == 1)
+		{
+			canvas.beginPath();
+			canvas.arc(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale, 0, 2 * Math.PI);
+			canvas.fillStyle = color + (time[i] / (minTime + rangeTime)) + ")";
+			canvas.fill();
+		}
+		else if(type == 2)
+		{
+			canvas.fillStyle = color + (time[i] / (minTime + rangeTime)) + ")";
+			canvas.fillRect(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2, size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2);
+		}
+		else if(type == 3)
+		{
+			if(i%2 == 1)
+			{
+				canvas.fillStyle = color + (time[i] / (minTime + rangeTime)) + ")";
+				canvas.fillRect(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2, size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale * 2);
+			}
+			else
+			{
+				canvas.beginPath();
+				canvas.arc(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale, 0, 2 * Math.PI);
+				canvas.fillStyle = color + (time[i] / (minTime + rangeTime)) + ")";
+				canvas.fill();
+			}
+		}
+		
 		//canvas.stroke();
-		//canvas.fillRect(x[i], y[i], size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale, size[i] + ((minTime + rangeTime - time[i]) / (minTime + rangeTime)) * rangeScale);
 
 		time[i] -= volume * 2;
 		x[i] += dx[i] * volume * 2;
