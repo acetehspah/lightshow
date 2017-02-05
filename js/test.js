@@ -6,13 +6,14 @@ var canvasContext = null;
 var WIDTH=window.innerWidth;
 var HEIGHT=window.innerHeight;
 var rafID = null;
-var maxR = WIDTH / 10;
+var maxR = WIDTH / 8;
 var minR = maxR * 3 / 5;
 var rangeR = maxR - minR;
 var displayType = "a";
 var color = "rgba(255, 255, 255, ";
 var imSource = new Image();
 var image = 0;
+var randCol = 0;
 
 
 document.onkeypress = function (e) {
@@ -76,16 +77,26 @@ document.onkeypress = function (e) {
     if(str === "0")
     {
         imSource.src = null;
+        color = "rgba(255, 255, 255, ";
         image = 0;
+        randCol = 0;
+    }
+    if(str === "9")
+    {
+        randCol = 1;
     }
 };
+
+function randColor(){
+    return "rgba( " + Math.floor(Math.random()*255) + ", " + Math.floor(Math.random()*255) + ", " + Math.floor(Math.random()*255) + ", ";
+}
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
-    maxR = WIDTH / 10;
+    maxR = WIDTH / 8;
     minR = maxR * 3 / 5;
     rangeR = maxR - minR;
     resizeParticleCanvas(canvas);
@@ -165,6 +176,10 @@ function gotStream(stream) {
 
 function drawLoop( time ) {
     // clear the background
+    if(randCol == 1)
+    {
+        color = randColor();
+    }
     canvasContext.clearRect(0,0,WIDTH,HEIGHT);
     wave.getByteFrequencyData(frequencyData);
     drawParticles(canvasContext, meter.volume, color, image, imSource);
