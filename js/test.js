@@ -69,7 +69,7 @@ document.onkeypress = function (e) {
     {
         color = "rgba(255, 0, 255, ";
     }
-    if(str === "p" || str === "l")
+    if(str === "p" || str === "l" || str === "h")
     {
         imSource.src = "img/" + str + ".png";
         image = 1;
