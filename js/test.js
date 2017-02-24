@@ -14,7 +14,14 @@ var color = "rgba(255, 255, 255, ";
 var imSource = new Image();
 var image = 0;
 var randCol = 0;
-
+var sampleRate = 44100;
+var bufferSize = 1024;
+var binWidth = 100; //any number really;
+var bassVol = 0; // between 0 and 1;
+var bassMax = 200; //high cutoff point for bass;
+var bassMaxI = 1;
+var averaging = 0.85;
+var bassMinVol = .5; //to filter out background noise
 
 document.onkeypress = function (e) {
     e = e || window.event;
@@ -99,7 +106,6 @@ function resizeCanvas() {
     minR = maxR * 3 / 5;
     rangeR = maxR - minR;
     resizeParticleCanvas(canvas);
-
 }
 function getRadius(vol) {
 
@@ -152,6 +158,21 @@ function didntGetStream() {
     alert('Stream generation failed.');
 }
 
+function getBassVol(array) {
+    var sum = 0;
+    var max = 0;
+    for(i = 0; i < bassMaxI; i++)
+    {
+        sum += array[i];
+        if(array[i] > max)
+        {
+            max = array[i];
+        }
+    }
+    return Math.max(bassVol * averaging, (sum/(255 * bassMaxI) - bassMinVol) / (1 - bassMinVol));
+    //return Math.max(bassVol * averaging, (max/255 - bassMinVol) / (1 - bassMinVol));
+}
+
 var mediaStreamSource = null;
 
 function gotStream(stream) {
@@ -166,8 +187,11 @@ function gotStream(stream) {
     wave = audioContext.createAnalyser();
     wave.fftSize = 2048;
     mediaStreamSource.connect(wave);
-    frequencyData = new Uint8Array(wave.frequencyBinCount * 2);
-
+    frequencyData = new Uint8Array(wave.frequencyBinCount);
+    bufferSize = wave.frequencyBinCount;
+    sampleRate = audioContext.sampleRate;
+    binWidth = sampleRate/bufferSize;
+    bassMaxI = Math.ceil(bassMax/binWidth);
 
     // kick off the visual updating
     drawLoop();
@@ -182,6 +206,8 @@ function drawLoop( time ) {
     canvasContext.clearRect(0,0,WIDTH,HEIGHT);
     wave.getByteFrequencyData(frequencyData);
     drawParticles(canvasContext, meter.volume, color, image, imSource);
+    //drawParticles(canvasContext, bassVol, color, image, imSource);
+    bassVol = getBassVol(frequencyData);
     // draw a bar based on the current volume
     //canvasContext.fillRect(HEIGHT / 4, HEIGHT / 4, meter.volume*WIDTH*3, HEIGHT / 2);
     
@@ -189,7 +215,7 @@ function drawLoop( time ) {
     //{
     //    canvasContext.fillRect(0 + i, HEIGHT/2, 5, meter.wave[i] * HEIGHT/2);
     //}
-    for(i = 0; i < frequencyData.length/4; i++)
+    for(i = 0; i < frequencyData.length; i++)
     {
         /*if(displayType.includes("a"))
         {
@@ -205,23 +231,24 @@ function drawLoop( time ) {
             canvasContext.fillRect(WIDTH/2 + i, HEIGHT/2 - frequencyData[i] / 255 * HEIGHT/20, 1, frequencyData[i] * 2 / 255 * HEIGHT / 20);
         }
     }
-        if(image == 1)
-        {
-            var radd = getRadius(meter.volume)
-            canvasContext.drawImage(imSource, WIDTH/2 - radd, HEIGHT/2 - radd, radd * 2, radd * 2 );
-        }
-        else
-        {
-            canvasContext.beginPath();
-            canvasContext.arc(WIDTH / 2, HEIGHT / 2, getRadius(meter.volume), 0, 2 * Math.PI);
-            //canvasContext.arc(WIDTH / 2, HEIGHT / 2, getVScale(meter.volume), 0, 2 * Math.PI);
-            canvasContext.fillStyle = color + "1)";
-            canvasContext.fill();
-            canvasContext.lineWidth = 2;
-            canvasContext.strokeStyle = color + "1)";
-            canvasContext.stroke();
-        }
-    for(i = 0; i < frequencyData.length/4; i++)
+    if(image == 1)
+    {
+        var radd = getRadius(meter.volume)
+        canvasContext.drawImage(imSource, WIDTH/2 - radd, HEIGHT/2 - radd, radd * 2, radd * 2 );
+    }
+    else
+    {
+        canvasContext.beginPath();
+        //canvasContext.arc(WIDTH / 2, HEIGHT / 2, getRadius(meter.volume), 0, 2 * Math.PI);
+        canvasContext.arc(WIDTH / 2, HEIGHT / 2, getRadius(bassVol), 0, 2 * Math.PI);
+        //canvasContext.arc(WIDTH / 2, HEIGHT / 2, getVScale(meter.volume), 0, 2 * Math.PI);
+        canvasContext.fillStyle = color + "1)";
+        canvasContext.fill();
+        canvasContext.lineWidth = 2;
+        canvasContext.strokeStyle = color + "1)";
+        canvasContext.stroke();
+    }
+    for(i = 0; i < frequencyData.length/2; i++)
     {
         if(displayType.includes("s"))
         {

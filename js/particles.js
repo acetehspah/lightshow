@@ -16,6 +16,7 @@ var HEIGHT = 0;
 var type = 1;
 
 
+
 function createParticles() {
 	for(i = 0; i < length; i++)
 	{
