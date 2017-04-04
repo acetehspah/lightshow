@@ -69,7 +69,6 @@ function volumeAudioProcess( event ) {
     var bufLength = buf.length;
 	var sum = 0;
     var x;
-    document.title = bufLength;
 
 	// Do a root-mean-square on the samples: sum up the squares...
     for (var i=0; i<bufLength; i++) {
