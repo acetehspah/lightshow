@@ -22,7 +22,7 @@ var bassMax = 150; //high cutoff point for bass;
 var bassMaxI = 1;
 var averaging = 0.85;
 var bassMinVol = .50; //to filter out background noise
-var showFace = 0;
+var showFace = 1;
 var faceURL = 0;
 var img;
 var faceRect = 0;
