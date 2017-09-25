@@ -11,10 +11,43 @@
   <script src="js/volume-meter.js"></script>
   <script src="js/particles.js"></script>
   <script src="js/test.js"></script>
+  <script src="js/tracking/build/tracking-min.js"></script>
+  <script src="js/tracking/build/data/face-min.js"></script>
+  <!-- <script src="js/tracking/node_modules/dat.gui/build/dat.gui.min.js"></script> -->
+  <!-- <script src="js/tracking/examples/assets/stats.min.js"></script> -->
+
+  <style>
+  video, #canvas2 {
+    margin-left: 230px;
+    margin-top: 120px;
+    position: absolute;
+    /*display: none;*/
+  }
+  canvas{
+    position: absolute;
+  }
+  </style>
 
 </head>
 <body id= "background" background = "img/q.jpg" >
   <canvas id="canvas" onkeypress= "myKeyPress(event)">
   </canvas>
+  <div class="demo-frame">
+    <div class="demo-container">
+      <video id="video" width="320" height="240" preload autoplay loop muted></video>
+      <canvas id="canvas2" width="320" height="240"></canvas>
+    </div>
+  </div>
+  <canvas id="secondcanvas" width="400" height="400" style="display:none"></canvas>
+
+  <script>
+    // window.onload = function() {
+      
+    //   // var gui = new dat.GUI();
+    //   // gui.add(tracker, 'edgesDensity', 0.1, 0.5).step(0.01);
+    //   // gui.add(tracker, 'initialScale', 1.0, 10.0).step(0.1);
+    //   // gui.add(tracker, 'stepSize', 1, 5).step(0.1);
+    // };
+  </script>
 </body>
 </html>
