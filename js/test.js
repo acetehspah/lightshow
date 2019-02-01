@@ -21,7 +21,7 @@ var bassVol = 0; // between 0 and 1;
 var bassMax = 150; //high cutoff point for bass;
 var bassMaxI = 1;
 var averaging = 0.85;
-var bassMinVol = .50; //to filter out background noise
+var bassMinVol = .50; //to filter out background noise, before: .5
 var showFace = 1;
 var faceURL = 0;
 var img;
@@ -103,7 +103,7 @@ document.onkeypress = function (e) {
         {
             cann2.style.display = "block";
             video.style.display = "block";
-            showFace = 1
+            showFace = 1;
         }
         else
         {
